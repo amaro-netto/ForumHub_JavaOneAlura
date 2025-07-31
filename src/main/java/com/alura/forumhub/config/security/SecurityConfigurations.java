@@ -29,9 +29,11 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(req -> { // Configura as regras de autorização para requisições HTTP
                     req.requestMatchers(HttpMethod.POST, "/login").permitAll(); // Permite acesso a /login via POST sem autenticação
                     req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll(); // Permite acesso à documentação da API (Swagger UI) sem autenticação
-                    req.anyRequest().authenticated(); // Todas as outras requisições exigem autenticação
+                    req.requestMatchers("/h2-console/**").permitAll();
+                    req.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) // LINHA ADICIONADA: Adiciona o SecurityFilter antes do filtro de autenticação de usuário/senha
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
                 .build(); // Constrói e retorna a cadeia de filtros
     }
 
